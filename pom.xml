@@ -7,8 +7,6 @@
     <artifactId>redis-client-utils</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>redis-client-utils</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
