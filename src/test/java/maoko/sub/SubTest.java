@@ -1,7 +1,6 @@
 package maoko.sub;
 
 import maoko.common.DateFormatUtil;
-import maoko.common.StaticClass;
 import maoko.common.StringUtil;
 import maoko.common.exception.DataIsNullException;
 import maoko.common.exception.OstypeMissWatchException;
@@ -32,7 +31,7 @@ public class SubTest {
     @BeforeClass
     public static void start() throws CusException, OstypeMissWatchException, DataIsNullException, LoginitException {
         SDKCommon.init();
-        cache = CacheFactory.createCacheOpt();
+        cache = CacheFactory.getRedisClientUtils();
         cache.start();
         subCenter = new SubCenter();
         System.out.println("Hello redis! inited success!");

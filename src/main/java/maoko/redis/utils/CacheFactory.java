@@ -10,13 +10,15 @@ import maoko.redis.utils.subpub.SubCenter;
 
 public class CacheFactory {
     public static RedisPoolConfig redisConfig;
+    private static ICache iCache;
+
 
     /**
      * 创建实例
      *
      * @return
      */
-    public static synchronized ICache createCacheOpt() throws CusException {
+    private static synchronized ICache createCacheOpt() throws CusException {
         ConfigUtil.GetInstance().ReadConfig();
         redisConfig = ConfigUtil.GetInstance().getRedisconf();
         RedisDistribtLock.init();
@@ -27,7 +29,14 @@ public class CacheFactory {
         } else {
             iCache = new CacheSingleImp();
         }
-        SubCenter.init(iCache);//开启订阅
+        SubCenter.init();//初始化订阅系统
+        return iCache;
+    }
+
+    public static synchronized ICache getRedisClientUtils() throws CusException {
+        if (null == iCache) {
+            iCache = createCacheOpt();
+        }
         return iCache;
     }
 }

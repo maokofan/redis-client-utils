@@ -3,6 +3,8 @@ package maoko.redis.utils.subpub;
 import maoko.common.log.IWriteLog;
 import maoko.common.log.Log4j2Writer;
 import maoko.common.tdPool.TdCachePoolExctor;
+import maoko.redis.utils.CacheFactory;
+import maoko.redis.utils.except.CusException;
 import maoko.redis.utils.ifs.ICache;
 import redis.clients.jedis.JedisPubSub;
 
@@ -21,10 +23,10 @@ public class SubCenter {
     private static ConcurrentMap<String, MesageSub> mesSubs;
     private static ICache iCache;
 
-    public static synchronized void init(ICache iCache) {
+    public static synchronized void init() throws CusException {
         tdPool = new TdCachePoolExctor();
         mesSubs = new ConcurrentHashMap<>();
-        SubCenter.iCache = iCache;
+        SubCenter.iCache = CacheFactory.getRedisClientUtils();
     }
 
     /**
