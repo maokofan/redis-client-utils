@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Redis>
     <Nodes sentinel="false"><!-- 是否是哨兵主从模式 -->
-        <HostAndPort IP="3.1.150.16" Port="6379"/>
+        <HostAndPort IP="127.0.0.1" Port="6379"/>
     </Nodes>
 </Redis>
