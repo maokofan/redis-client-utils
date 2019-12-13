@@ -26,21 +26,19 @@ public class SubTest {
 
     private static final String CHANEL_NAME = "LIDONGREDISTEST";
     private static ICache cache;
-    private static SubCenter subCenter;
 
     @BeforeClass
     public static void start() throws CusException, OstypeMissWatchException, DataIsNullException, LoginitException {
         SDKCommon.init();
         cache = CacheFactory.getRedisClientUtils();
         cache.start();
-        subCenter = new SubCenter();
         System.out.println("Hello redis! inited success!");
     }
 
     @Test
     public void test01sub() throws Exception {
         SubPuber subPuber = new SubPuber(CHANEL_NAME);
-        subCenter.subChanel(subPuber, subPuber.getChanel());
+        cache.subScribeNio(subPuber, subPuber.getChanel());
     }
 
     @Test
