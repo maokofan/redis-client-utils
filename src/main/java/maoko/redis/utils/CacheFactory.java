@@ -29,7 +29,6 @@ public class CacheFactory {
         } else {
             iCache = new CacheSingleImp();
         }
-        SubCenter.init();//初始化订阅系统
         return iCache;
     }
 

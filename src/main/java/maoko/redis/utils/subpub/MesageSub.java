@@ -16,18 +16,17 @@ public class MesageSub implements Runnable {
     private static IWriteLog log = new Log4j2Writer(MesageSub.class);
     private JedisPubSub jedisPubSub;
     private String channelName;
-    private ICache iCache;
     private boolean isStoped = false;
+    private ISubRunnable subRunnable;
 
     /**
      * @param jedisPubSub
      * @param channelName
-     * @param iCache      缓存助手
      */
-    public MesageSub(JedisPubSub jedisPubSub, String channelName, ICache iCache) {
+    public MesageSub(JedisPubSub jedisPubSub, String channelName, ISubRunnable subRunnable) {
         this.jedisPubSub = jedisPubSub;
         this.channelName = channelName;
-        this.iCache = iCache;
+        this.subRunnable = subRunnable;
     }
 
     private Thread td;
@@ -47,9 +46,9 @@ public class MesageSub implements Runnable {
 
         while (!isStoped) {
             try {
-                SvrNodeState state = iCache.getSvrStates();
+                SvrNodeState state = subRunnable.getSvrStates();
                 if (state != null && !state.isTrouble())
-                    iCache.subScribe(jedisPubSub, channelName);
+                    subRunnable.subChanel(jedisPubSub, channelName);
             } catch (Exception e) {
                 e.printStackTrace();
                 if (System.currentTimeMillis() - printTime > timeexpire) {

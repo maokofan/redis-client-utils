@@ -328,6 +328,14 @@ public interface ICache {
     void subScribe(JedisPubSub jedispubSub, String channel) throws CusException;
 
     /**
+     * 订阅【非阻塞】
+     *
+     * @param jedispubSub 订阅发布器
+     * @param channel     频道名称
+     */
+    void subScribeNio(JedisPubSub jedispubSub, String channel) throws CusException;
+
+    /**
      * 发布
      *
      * @param channel 频道

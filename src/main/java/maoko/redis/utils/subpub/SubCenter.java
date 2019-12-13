@@ -4,6 +4,7 @@ import maoko.common.log.IWriteLog;
 import maoko.common.log.Log4j2Writer;
 import maoko.common.tdPool.TdCachePoolExctor;
 import maoko.redis.utils.CacheFactory;
+import maoko.redis.utils.entity.cluster.SvrNodeState;
 import maoko.redis.utils.except.CusException;
 import maoko.redis.utils.ifs.ICache;
 import redis.clients.jedis.JedisPubSub;
@@ -21,12 +22,15 @@ public class SubCenter {
     private static final IWriteLog log = new Log4j2Writer(SubCenter.class);
     private static TdCachePoolExctor tdPool;// 消息订阅线程池
     private static ConcurrentMap<String, MesageSub> mesSubs;
-    private static ICache iCache;
+    private ICache iCache;
 
     public static synchronized void init() throws CusException {
         tdPool = new TdCachePoolExctor();
         mesSubs = new ConcurrentHashMap<>();
-        SubCenter.iCache = CacheFactory.getRedisClientUtils();
+    }
+
+    public SubCenter(ICache iCache) {
+        this.iCache = iCache;
     }
 
     /**
@@ -35,10 +39,20 @@ public class SubCenter {
      * @param jedisPubSub
      * @param chanel
      */
-    public void subChanel(JedisPubSub jedisPubSub, String chanel) throws Exception {
+    public void subChanel(JedisPubSub jedisPubSub, String chanel) throws CusException {
         if (mesSubs.containsKey(chanel))
-            throw new Exception(chanel + "频道已经存在，请勿重复订阅！");
-        MesageSub mesageSub = new MesageSub(jedisPubSub, chanel, iCache);
+            throw new CusException(chanel + "频道已经存在，请勿重复订阅！");
+        MesageSub mesageSub = new MesageSub(jedisPubSub, chanel, new ISubRunnable() {
+            @Override
+            public SvrNodeState getSvrStates() {
+                return iCache.getSvrStates();
+            }
+
+            @Override
+            public void subChanel(JedisPubSub pubSub, String chanel)throws CusException {
+                iCache.subScribe(pubSub, chanel);
+            }
+        });
         mesSubs.put(chanel, mesageSub);
         tdPool.execute(mesageSub);
     }

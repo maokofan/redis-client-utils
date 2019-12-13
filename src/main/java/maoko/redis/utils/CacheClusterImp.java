@@ -429,6 +429,11 @@ public class CacheClusterImp implements ICache {
     }
 
     @Override
+    public void subScribeNio(JedisPubSub jedispubSub, String channel) throws CusException {
+
+    }
+
+    @Override
     public void subScribe(JedisPubSub jedispubSub, String channel) throws CusException {
         try {
             jedisCmd.subscribe(jedispubSub, channel);
